@@ -2,103 +2,119 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
+import { usePathname } from 'next/navigation'
+import { AuthGuard } from '@/app/components/layout/AuthGuard'
+import { useAuth } from '@/app/context/AuthContext'
+import { Button } from '@/app/components/common/Button'
 
 export default function MainLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const router = useRouter()
+  const pathname = usePathname()
+  const { logout, user } = useAuth()
   const [sidebarOpen, setSidebarOpen] = useState(true)
-  const [authenticated, setAuthenticated] = useState(false)
 
-  useEffect(() => {
-    const token = localStorage.getItem('admin_token')
-    if (!token) {
-      router.push('/login')
-    } else {
-      setAuthenticated(true)
-    }
-  }, [router])
-
-  const handleLogout = () => {
-    localStorage.removeItem('admin_token')
-    router.push('/login')
-  }
-
-  if (!authenticated) {
-    return null
+  const handleLogout = async () => {
+    await logout()
   }
 
   const navItems = [
-    { label: 'Dashboard', href: '/dashboard' },
-    { label: 'Orders', href: '/orders' },
-    { label: 'Vendors', href: '/vendors' },
-    { label: 'Settlements', href: '/settlements' },
-    { label: 'Returns', href: '/returns' },
-    { label: 'Analytics', href: '/analytics' },
-    { label: 'Settings', href: '/settings' },
+    { label: 'Dashboard', href: '/dashboard', icon: '📊' },
+    { label: 'Orders', href: '/orders', icon: '📦' },
+    { label: 'Vendors', href: '/vendors', icon: '🏪' },
+    { label: 'Settlements', href: '/settlements', icon: '💰' },
+    { label: 'Returns', href: '/returns', icon: '🔄' },
+    { label: 'Analytics', href: '/analytics', icon: '📈' },
+    { label: 'Settings', href: '/settings', icon: '⚙️' },
   ]
 
+  const isActive = (href: string) => pathname === href
+
   return (
-    <div className="flex h-screen bg-gray-100">
-      {/* Sidebar */}
-      <aside
-        className={`${
-          sidebarOpen ? 'w-64' : 'w-20'
-        } bg-gray-900 text-white transition-all duration-300 overflow-hidden`}
-      >
-        <div className="flex items-center justify-between p-4 border-b border-gray-800">
-          <h1 className={`font-bold text-lg ${!sidebarOpen && 'hidden'}`}>
-            HW247
-          </h1>
-          <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="p-1 hover:bg-gray-800 rounded"
-          >
-            ☰
-          </button>
-        </div>
-
-        <nav className="p-4 space-y-2">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="block px-4 py-2 rounded hover:bg-gray-800 transition-colors"
-              title={item.label}
+    <AuthGuard>
+      <div className="flex h-screen bg-gray-50">
+        {/* Sidebar */}
+        <aside
+          className={`${
+            sidebarOpen ? 'w-64' : 'w-20'
+          } bg-gray-900 text-white transition-all duration-300 overflow-hidden flex flex-col`}
+        >
+          {/* Logo */}
+          <div className="flex items-center justify-between p-4 border-b border-gray-800">
+            <h1 className={`font-bold text-lg whitespace-nowrap ${!sidebarOpen && 'hidden'}`}>
+              HW247
+            </h1>
+            <button
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              className="p-1 hover:bg-gray-800 rounded transition-colors"
+              title={sidebarOpen ? 'Collapse' : 'Expand'}
             >
-              {sidebarOpen ? item.label : item.label.charAt(0)}
-            </Link>
-          ))}
-        </nav>
+              ☰
+            </button>
+          </div>
 
-        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-800">
-          <button
-            onClick={handleLogout}
-            className={`w-full px-4 py-2 bg-red-600 hover:bg-red-700 rounded text-sm ${
-              !sidebarOpen && 'p-2'
-            }`}
-          >
-            {sidebarOpen ? 'Logout' : '⎇'}
-          </button>
+          {/* Navigation */}
+          <nav className="flex-1 p-4 space-y-2">
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`flex items-center gap-3 px-4 py-2 rounded transition-colors ${
+                  isActive(item.href)
+                    ? 'bg-blue-600 text-white'
+                    : 'text-gray-300 hover:bg-gray-800'
+                }`}
+                title={item.label}
+              >
+                <span>{item.icon}</span>
+                {sidebarOpen && <span>{item.label}</span>}
+              </Link>
+            ))}
+          </nav>
+
+          {/* User Info & Logout */}
+          <div className="p-4 border-t border-gray-800 space-y-3">
+            {sidebarOpen && user && (
+              <div className="text-xs">
+                <p className="text-gray-400">Logged in as</p>
+                <p className="font-semibold truncate">{user.name}</p>
+                <p className="text-gray-400 text-xs">{user.email}</p>
+              </div>
+            )}
+            <Button
+              variant="danger"
+              size="sm"
+              fullWidth={sidebarOpen}
+              onClick={handleLogout}
+            >
+              {sidebarOpen ? 'Logout' : '⎇'}
+            </Button>
+          </div>
+        </aside>
+
+        {/* Main Content */}
+        <div className="flex-1 flex flex-col">
+          {/* Top Bar */}
+          <header className="bg-white border-b border-gray-200 px-6 py-4 shadow-sm">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">Admin Portal</h2>
+                <p className="text-sm text-gray-600 mt-1">Week 1 Foundation - Setup Complete</p>
+              </div>
+              <div className="text-right text-sm text-gray-600">
+                <p>Phase H Implementation</p>
+              </div>
+            </div>
+          </header>
+
+          {/* Content */}
+          <main className="flex-1 overflow-auto p-6">
+            {children}
+          </main>
         </div>
-      </aside>
-
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col">
-        {/* Top Bar */}
-        <header className="bg-white border-b border-gray-200 px-6 py-4 shadow-sm">
-          <h2 className="text-2xl font-bold text-gray-900">Admin Portal</h2>
-        </header>
-
-        {/* Content */}
-        <main className="flex-1 overflow-auto p-6">
-          {children}
-        </main>
       </div>
-    </div>
+    </AuthGuard>
   )
 }

@@ -13,7 +13,7 @@ export default function OrdersPage() {
   const { orders, loading, error, currentPage, totalPages, totalItems, setFilters, setPage } =
     useOrderFilters()
   const [showBatchOps, setShowBatchOps] = useState(false)
-  const [selectedOrders, setSelectedOrders] = useState<string[]>([])
+  const [selectedOrders] = useState<string[]>([])
 
   useEffect(() => {
     // Initial load
@@ -24,11 +24,11 @@ export default function OrdersPage() {
     await setFilters(filters)
   }
 
-  const toggleOrderSelection = (orderId: string) => {
-    setSelectedOrders((prev) =>
-      prev.includes(orderId) ? prev.filter((id) => id !== orderId) : [...prev, orderId]
-    )
-  }
+  // const toggleOrderSelection = (orderId: string) => {
+  //   setSelectedOrders((prev) =>
+  //     prev.includes(orderId) ? prev.filter((id) => id !== orderId) : [...prev, orderId]
+  //   )
+  // }
 
   return (
     <div className="space-y-6">

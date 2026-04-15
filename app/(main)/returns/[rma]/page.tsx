@@ -9,8 +9,8 @@ import { Alert } from '@/app/components/common/Alert'
 import { Spinner } from '@/app/components/common/Spinner'
 import { Button } from '@/app/components/common/Button'
 import { Badge } from '@/app/components/common/Badge'
-import { DisputeThread } from './components/DisputeThread'
-import { ForceApprovalModal } from './components/ForceApprovalModal'
+import { DisputeThread } from '../components/DisputeThread'
+import { ForceApprovalModal } from '../components/ForceApprovalModal'
 import { formatDate, formatDateTime } from '@/lib/utils'
 
 export default function ReturnDetailPage() {

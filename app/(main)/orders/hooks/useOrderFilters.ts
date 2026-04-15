@@ -72,8 +72,8 @@ export function useOrderFilters(): UseOrderFiltersResult {
     [fetchOrders, filters]
   )
 
-  const refetch = useCallback(() => {
-    fetchOrders(currentPage, filters)
+  const refetch = useCallback(async () => {
+    await fetchOrders(currentPage, filters)
   }, [fetchOrders, currentPage, filters])
 
   return {

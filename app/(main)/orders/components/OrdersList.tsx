@@ -9,7 +9,7 @@ import { formatCurrency, formatDate } from '@/lib/utils'
 interface OrdersListProps {
   orders: Order[]
   loading?: boolean
-  error?: string
+  error?: string | null
   onRowClick?: (order: Order) => void
 }
 
@@ -60,7 +60,7 @@ export function OrdersList({ orders, loading = false, error, onRowClick }: Order
       columns={columns}
       data={orders}
       loading={loading}
-      error={error}
+      error={error || undefined}
       emptyMessage="No orders found. Try adjusting your filters."
       onRowClick={onRowClick}
       striped

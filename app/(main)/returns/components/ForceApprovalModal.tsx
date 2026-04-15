@@ -125,7 +125,7 @@ export function ForceApprovalModal({ isOpen, onClose, rmaNumber, onSuccess }: Fo
           </div>
         ) : (
           <div className="space-y-4">
-            <Alert type="danger" title="Reject Return">
+            <Alert type="error" title="Reject Return">
               The return will be rejected. The buyer will be notified with the reason.
             </Alert>
 

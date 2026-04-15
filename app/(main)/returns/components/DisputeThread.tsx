@@ -14,7 +14,7 @@ interface DisputeThreadProps {
   onAddMessage?: (message: string) => Promise<void>
 }
 
-export function DisputeThread({ rmaNumber, messages, onAddMessage }: DisputeThreadProps) {
+export function DisputeThread({ messages, onAddMessage }: DisputeThreadProps) {
   const [newMessage, setNewMessage] = useState('')
   const [sending, setSending] = useState(false)
   const [error, setError] = useState('')

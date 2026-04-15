@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import api from '@/lib/api'
 import { Card } from '@/app/components/common/Card'
 import { Alert } from '@/app/components/common/Alert'
 import { Spinner } from '@/app/components/common/Spinner'

@@ -11,8 +11,9 @@ import { Input } from '@/app/components/common/Input'
 import { Select } from '@/app/components/common/Select'
 import { Pagination } from '@/app/components/common/Pagination'
 import { Spinner } from '@/app/components/common/Spinner'
+import { RoleGuard } from '@/app/components/layout/RoleGuard'
 
-export default function SettlementsPage() {
+function SettlementsPageContent() {
   const [settlements, setSettlements] = useState<Settlement[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -175,5 +176,13 @@ export default function SettlementsPage() {
         </>
       )}
     </div>
+  )
+}
+
+export default function SettlementsPage() {
+  return (
+    <RoleGuard requiredRoles={['master_admin', 'finance_team']}>
+      <SettlementsPageContent />
+    </RoleGuard>
   )
 }

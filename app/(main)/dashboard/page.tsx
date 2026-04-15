@@ -5,6 +5,7 @@ import { Card } from '@/app/components/common/Card'
 import { Alert } from '@/app/components/common/Alert'
 import { Spinner } from '@/app/components/common/Spinner'
 import { Button } from '@/app/components/common/Button'
+import { RoleGuard } from '@/app/components/layout/RoleGuard'
 import { formatCurrency } from '@/lib/utils'
 
 interface DashboardMetrics {
@@ -16,7 +17,7 @@ interface DashboardMetrics {
   aov: number
 }
 
-export default function DashboardPage() {
+function DashboardPageContent() {
   const [metrics, setMetrics] = useState<DashboardMetrics>({
     totalOrders: 0,
     activeVendors: 0,
@@ -223,5 +224,13 @@ export default function DashboardPage() {
         </div>
       </Card>
     </div>
+  )
+}
+
+export default function DashboardPage() {
+  return (
+    <RoleGuard>
+      <DashboardPageContent />
+    </RoleGuard>
   )
 }

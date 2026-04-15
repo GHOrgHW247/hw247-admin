@@ -1,6 +1,8 @@
 'use client'
 
-export default function SettingsPage() {
+import { RoleGuard } from '@/app/components/layout/RoleGuard'
+
+function SettingsPageContent() {
   return (
     <div className="space-y-6">
       <div>
@@ -21,5 +23,13 @@ export default function SettingsPage() {
         </ul>
       </div>
     </div>
+  )
+}
+
+export default function SettingsPage() {
+  return (
+    <RoleGuard requiredRoles={['master_admin']}>
+      <SettingsPageContent />
+    </RoleGuard>
   )
 }

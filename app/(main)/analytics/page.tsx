@@ -6,6 +6,7 @@ import { AnalyticsService } from '@/lib/services/analyticsService'
 import { Alert } from '@/app/components/common/Alert'
 import { Spinner } from '@/app/components/common/Spinner'
 import { Button } from '@/app/components/common/Button'
+import { RoleGuard } from '@/app/components/layout/RoleGuard'
 import { KPICard } from './components/KPICard'
 import { DateRangePicker } from './components/DateRangePicker'
 import { GMVTrendChart } from './components/GMVTrendChart'
@@ -24,7 +25,7 @@ interface DashboardMetrics {
   overall_return_rate: number
 }
 
-export default function AnalyticsPage() {
+function AnalyticsPageContent() {
   // State management
   const [dashboardMetrics, setDashboardMetrics] = useState<DashboardMetrics | null>(null)
   const [gmvTrends, setGmvTrends] = useState<AnalyticsMetrics[]>([])
@@ -196,5 +197,13 @@ export default function AnalyticsPage() {
         range selector to analyze trends over different periods.
       </Alert>
     </div>
+  )
+}
+
+export default function AnalyticsPage() {
+  return (
+    <RoleGuard requiredRoles={['master_admin', 'finance_team']}>
+      <AnalyticsPageContent />
+    </RoleGuard>
   )
 }

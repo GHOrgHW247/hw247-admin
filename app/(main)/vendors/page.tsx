@@ -11,8 +11,9 @@ import { Input } from '@/app/components/common/Input'
 import { Select } from '@/app/components/common/Select'
 import { Pagination } from '@/app/components/common/Pagination'
 import { Spinner } from '@/app/components/common/Spinner'
+import { RoleGuard } from '@/app/components/layout/RoleGuard'
 
-export default function VendorsPage() {
+function VendorsPageContent() {
   const [vendors, setVendors] = useState<Vendor[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -189,5 +190,13 @@ export default function VendorsPage() {
         </>
       )}
     </div>
+  )
+}
+
+export default function VendorsPage() {
+  return (
+    <RoleGuard requiredRoles={['master_admin', 'catalog_team']}>
+      <VendorsPageContent />
+    </RoleGuard>
   )
 }

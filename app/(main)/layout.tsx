@@ -6,6 +6,8 @@ import { usePathname } from 'next/navigation'
 import { AuthGuard } from '@/app/components/layout/AuthGuard'
 import { useAuth } from '@/app/context/AuthContext'
 import { Button } from '@/app/components/common/Button'
+import { ALL_NAV_ITEMS, ROLE_DISPLAY } from '@/lib/roles'
+import { AuthorizationService } from '@/lib/authorization'
 
 export default function MainLayout({
   children,
@@ -13,24 +15,22 @@ export default function MainLayout({
   children: React.ReactNode
 }) {
   const pathname = usePathname()
-  const { logout, user } = useAuth()
+  const { logout, user, roles, getAccessibleModules } = useAuth()
   const [sidebarOpen, setSidebarOpen] = useState(true)
 
   const handleLogout = async () => {
     await logout()
   }
 
-  const navItems = [
-    { label: 'Dashboard', href: '/dashboard', icon: '📊' },
-    { label: 'Orders', href: '/orders', icon: '📦' },
-    { label: 'Vendors', href: '/vendors', icon: '🏪' },
-    { label: 'Settlements', href: '/settlements', icon: '💰' },
-    { label: 'Returns', href: '/returns', icon: '🔄' },
-    { label: 'Analytics', href: '/analytics', icon: '📈' },
-    { label: 'Settings', href: '/settings', icon: '⚙️' },
-  ]
+  // Filter navigation items based on user roles
+  const accessibleModules = getAccessibleModules()
+  const filteredNavItems = ALL_NAV_ITEMS.filter((item) => accessibleModules.includes(item.moduleKey))
 
   const isActive = (href: string) => pathname === href
+
+  // Get role display info
+  const roleInfo =
+    roles.length > 0 && ROLE_DISPLAY[roles[0]] ? ROLE_DISPLAY[roles[0]] : null
 
   return (
     <AuthGuard>
@@ -57,7 +57,7 @@ export default function MainLayout({
 
           {/* Navigation */}
           <nav className="flex-1 p-4 space-y-2">
-            {navItems.map((item) => (
+            {filteredNavItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
@@ -77,10 +77,19 @@ export default function MainLayout({
           {/* User Info & Logout */}
           <div className="p-4 border-t border-gray-800 space-y-3">
             {sidebarOpen && user && (
-              <div className="text-xs">
-                <p className="text-gray-400">Logged in as</p>
-                <p className="font-semibold truncate">{user.name}</p>
-                <p className="text-gray-400 text-xs">{user.email}</p>
+              <div className="text-xs space-y-2">
+                {/* Role Badge */}
+                {roleInfo && (
+                  <div className={`px-2 py-1 rounded-full text-center ${roleInfo.color}`}>
+                    <p className="font-semibold text-xs">{roleInfo.label}</p>
+                  </div>
+                )}
+                {/* User Info */}
+                <div>
+                  <p className="text-gray-400">Logged in as</p>
+                  <p className="font-semibold truncate">{user.name}</p>
+                  <p className="text-gray-400 text-xs">{user.email}</p>
+                </div>
               </div>
             )}
             <Button

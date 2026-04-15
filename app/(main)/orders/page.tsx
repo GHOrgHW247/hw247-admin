@@ -7,9 +7,10 @@ import { Pagination } from '@/app/components/common/Pagination'
 import { Card } from '@/app/components/common/Card'
 import { Alert } from '@/app/components/common/Alert'
 import { Button } from '@/app/components/common/Button'
+import { RoleGuard } from '@/app/components/layout/RoleGuard'
 import { useOrderFilters } from './hooks/useOrderFilters'
 
-export default function OrdersPage() {
+function OrdersPageContent() {
   const { orders, loading, error, currentPage, totalPages, totalItems, setFilters, setPage } =
     useOrderFilters()
   const [showBatchOps, setShowBatchOps] = useState(false)
@@ -92,5 +93,13 @@ export default function OrdersPage() {
         </Card>
       )}
     </div>
+  )
+}
+
+export default function OrdersPage() {
+  return (
+    <RoleGuard requiredRoles={['master_admin', 'order_team', 'finance_team']}>
+      <OrdersPageContent />
+    </RoleGuard>
   )
 }

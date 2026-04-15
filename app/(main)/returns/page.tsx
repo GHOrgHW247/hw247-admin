@@ -11,8 +11,9 @@ import { Input } from '@/app/components/common/Input'
 import { Select } from '@/app/components/common/Select'
 import { Pagination } from '@/app/components/common/Pagination'
 import { Spinner } from '@/app/components/common/Spinner'
+import { RoleGuard } from '@/app/components/layout/RoleGuard'
 
-export default function ReturnsPage() {
+function ReturnsPageContent() {
   const [returns, setReturns] = useState<Return[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -181,5 +182,13 @@ export default function ReturnsPage() {
         Returns are tracked automatically. Escalations occur after 7 days without resolution. All disputes must be resolved within 30 days per marketplace policy.
       </Alert>
     </div>
+  )
+}
+
+export default function ReturnsPage() {
+  return (
+    <RoleGuard requiredRoles={['master_admin', 'order_team', 'support_team']}>
+      <ReturnsPageContent />
+    </RoleGuard>
   )
 }

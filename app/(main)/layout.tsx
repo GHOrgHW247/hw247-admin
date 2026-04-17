@@ -7,7 +7,6 @@ import { AuthGuard } from '@/app/components/layout/AuthGuard'
 import { useAuth } from '@/app/context/AuthContext'
 import { Button } from '@/app/components/common/Button'
 import { ALL_NAV_ITEMS, ROLE_DISPLAY } from '@/lib/roles'
-import { AuthorizationService } from '@/lib/authorization'
 
 export default function MainLayout({
   children,

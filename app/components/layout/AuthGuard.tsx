@@ -3,10 +3,11 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/app/context/AuthContext'
+import { Role } from '@/lib/roles'
 
 interface AuthGuardProps {
   children: React.ReactNode
-  requiredRole?: 'super_admin' | 'admin' | 'operator'
+  requiredRole?: Role
   requiredPermission?: string
 }
 

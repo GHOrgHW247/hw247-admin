@@ -13,6 +13,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
   const [loading, setLoading] = useState(false)
   const [emailError, setEmailError] = useState('')
   const [passwordError, setPasswordError] = useState('')
@@ -40,12 +41,16 @@ export default function LoginPage() {
 
     try {
       await login(email, password)
-      router.push('/dashboard')
+      setSuccess('Login successful! Redirecting to dashboard...')
+      setError('')
+      setTimeout(() => router.push('/dashboard'), 500)
     } catch (err: any) {
-      setError(
-        err.response?.data?.message ||
+      const errorMessage = Array.isArray(err.response?.data?.message)
+        ? err.response.data.message.join(', ')
+        : err.response?.data?.message ||
           'Login failed. Please check your credentials and try again.'
-      )
+      setError(errorMessage)
+      setSuccess('')
     } finally {
       setLoading(false)
     }
@@ -64,6 +69,14 @@ export default function LoginPage() {
             <div className="mb-6">
               <Alert type="error" title="Login Error" dismissible onDismiss={() => setError('')}>
                 {error}
+              </Alert>
+            </div>
+          )}
+
+          {success && (
+            <div className="mb-6">
+              <Alert type="success" title="Login Successful" dismissible onDismiss={() => setSuccess('')}>
+                {success}
               </Alert>
             </div>
           )}

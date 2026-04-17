@@ -137,7 +137,7 @@ export class AuthorizationService {
   /**
    * Check if a route requires specific permissions
    */
-  static requiresPermission(route: string): string | null {
+  static requiresPermission(path: string): string | null {
     // Map routes to required permissions
     const routePermissions: Record<string, string> = {
       '/orders': 'orders.view',
@@ -149,7 +149,7 @@ export class AuthorizationService {
     }
 
     for (const [route, permission] of Object.entries(routePermissions)) {
-      if (arguments[0]?.startsWith(route)) {
+      if (path?.startsWith(route)) {
         return permission
       }
     }
@@ -162,14 +162,14 @@ export class AuthorizationService {
  * Hook-safe authorization check functions
  * Can be called from React components
  */
-export function useHasPermission(permissions: Set<string>) {
+export function useHasPermission(userPermissions: Set<string>) {
   return {
-    has: (permission: string) => AuthorizationService.hasPermission(permissions, permission),
+    has: (permission: string) => AuthorizationService.hasPermission(userPermissions, permission),
     hasAny: (permissions: string[]) =>
-      AuthorizationService.hasAnyPermission(permissions, permissions),
+      AuthorizationService.hasAnyPermission(userPermissions, permissions),
     hasAll: (permissions: string[]) =>
-      AuthorizationService.hasAllPermissions(permissions, permissions),
+      AuthorizationService.hasAllPermissions(userPermissions, permissions),
     canAccess: (resource: string, action: string) =>
-      AuthorizationService.canAccess(permissions, resource, action),
+      AuthorizationService.canAccess(userPermissions, resource, action),
   }
 }

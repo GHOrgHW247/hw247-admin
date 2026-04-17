@@ -3,7 +3,6 @@
 import { useAuth } from '@/app/context/AuthContext'
 import { Role } from '@/lib/roles'
 import { Spinner } from '@/app/components/common/Spinner'
-import { Alert } from '@/app/components/common/Alert'
 import { Button } from '@/app/components/common/Button'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
